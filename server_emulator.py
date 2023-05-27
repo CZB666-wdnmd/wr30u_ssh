@@ -252,7 +252,7 @@ def main():
             os.system("start http://192.168.31.1/init.html")
             print("ssh password is already showed on browser, or access http://(router_ip)/init.html")
             input("Press any key to continue...")
-            execute(session, r"umount /www/init.html")
+            execute(session, r"umount /www/init.html & umount /www/init.html")
 
             print("finish")
             pid = os.getpid()
