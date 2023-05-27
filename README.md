@@ -14,9 +14,11 @@ If you find any mistakes in this guide, _please_ submit a PR 👍🏻.
 
 2. An Ethernet cable.
 
-3. Python 3.10 with `pycryptodome` 3.17 installed.
+3. 'server_emulator.exe' from [release](https://github.com/CZB666-wdnmd/wr30u_ssh/releases)
 
-4. `server_emulator.py` from this repository.
+~~3. Python 3.10 with `pycryptodome` 3.17 installed.~~
+
+~~4. `server_emulator.py` from this ``repository.~~
 
 ## Enabling SSH Service
 
@@ -42,11 +44,7 @@ If you find any mistakes in this guide, _please_ submit a PR 👍🏻.
 
    ![image-20230516200237559](img/image-20230516200237559.png)
 
-4. Run server_emulator.py and wait for the router to found the connection.
-
-   ```shell
-   python.exe server_emulator.py
-   ```
+4. Run server_emulator.exe and wait for the router to found the connection.
 
    ![image-20230516195137324](img/image-20230516195137324.png)
 
@@ -54,9 +52,10 @@ If you find any mistakes in this guide, _please_ submit a PR 👍🏻.
 
    ```shell
    # These commands will be executed
-   echo -e 'admin\nadmin' | passwd root
+   mkxqimage -I > /tmp/password.txt  & mount --bind /tmp/password.txt /www/init.html
    nvram set ssh_en=1 && nvram commit
    sed -i 's/channel=.*/channel="debug"/g' /etc/init.d/dropbear && /etc/init.d/dropbear start
+   umount /www/init.html
    ```   
    ![image-20230516195354255](img/image-20230516195354255.png)
 
@@ -64,8 +63,15 @@ If you find any mistakes in this guide, _please_ submit a PR 👍🏻.
 
    ![image-20230516195434825](img/image-20230516195434825.png)
 
-7. Connect the Ethernet port of your computer to LAN port on the router.  Log in to the router using your favorite ssh client and account/password: `root/admin`.
+7. Connect the Ethernet port of your computer to LAN port on the router.  Log in to the router using your favorite ssh client and account/password: `root/(from browser or http://router_ip/init.html)`.
 
    ![image-20230516195618159](img/image-20230516195618159.png)
 
+   If you use ssh command on Windows Terminal(Powershell). Follow this.
+   ```shell
+   #Attation: it will remove all known hosts` key
+   Remove-Item -Path $env:USERPROFILE\.ssh\known_hosts -Force
+
+   ssh -oHostKeyAlgorithms=+ssh-rsa root@192.168.31.1
+   ```
 8. Enjoy yourself!
